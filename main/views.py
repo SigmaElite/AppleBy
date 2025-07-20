@@ -57,13 +57,13 @@ def product_list(request):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, is_available=True)#закид объект с продукта если слаг совпад и достпуность тру
-    related_products = Product.object.filter(category=product.category, is_availalbe=True).exclude(id=product.id)[:4]#ex исключ одинаковые товары и показ макс 4 
+    related_products = Product.objects.filter(category=product.category, is_available=True).exclude(id=product.id)[:4]#ex исключ одинаковые товары и показ макс 4 
 
     context = {
         'product': product,
         'related_products': related_products,
     }
-    return(request, 'main/product/product_detail.html', context)
+    return render(request, 'main/product/product_detail.html', context)
 
 
 def category_detail(request, slug):

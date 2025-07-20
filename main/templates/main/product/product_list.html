@@ -1,0 +1,139 @@
+{% extends "main/base.html" %}
+
+{% block title %}Каталог товаров - AppleBy{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Фильтры</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Категории</h6>
+                    <ul class="list-unstyled">
+                        {% for category in categories %}
+                        <li>
+                            <a href="{% url "main:category_detail" category.slug %}" class="text-decoration-none">{{ category.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                    <h6>Бренды</h6>
+                    <ul class="list-unstyled">
+                        {% for brand in brands %}
+                        <li>
+                            <a href="?brand={{ brand.slug }}"  class="text-decoration-none">{{ brand.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between mb-4">
+                <h2>Каталог товаров</h2>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Сортировка</button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="?sort=name" class="dropdown-item">По названию</a>
+                        </li>
+                        <li>
+                            <a href="?sort=price_low" class="dropdown-item">Сначала дешевые</a>
+                        </li>
+                        <li>
+                            <a href="?sort=price_high" class="dropdown-item">Сначала дорогие</a>
+                        </li>
+                        <li>
+                            <a href="?sort=newest" class="dropdown-item">Новинки</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                {% for product in page_obj %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card product-card h-100">
+                        <div class="position-relative">
+                            {% if product.main_image %}
+                                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="card-img-top" style="height: 250px; object-fit: contain;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300x250/f8f9fa/6c757d?text=" alt="{{ product.name }}" class="card-img-top">
+                            {% endif %}
+
+                            {% if product.is_new %}
+                                <span class="badge bg-success position-absolute top-0 start-0 m-2">Новинки</span>
+                            {% endif %}
+
+                            {% if product.is_sale %}
+                                <span class="badge bg-danger position-relative top-0 start-0 end-0 m-2">Скидка</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title">{{ product.name }}</h6>
+                            <p class="card-text text-muted small flex-grow-1">{{ product.short_description|truncatechars:80 }}</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between aligh-items-center">
+                                    <div>
+                                        {% if product.old_price %}
+                                            <span class="old_price text-decoration-line-through">
+                                                {{ product.old_price }} BYN
+                                            </span><br>
+                                            <span class="price">{{ product.price }} BYN</span>
+                                        {% else %}
+                                            <span class="price">{{ product.price }} BYN</span>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{% url "main:product_detail" product.slug %}" class="btn btn-apple btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <h4>Товары не найдены</h4>
+                        <p class="text-muted">Попробуйте изменить параметры поиска</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if page.obj.has_other_pager %}
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ page_obj.previous_page_numbe }}" class="page-link">Предыдущая</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% for num in page.obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a href="?page={{ page_obj.next_page_number }}" class="page_link">Следующая</a>
+                </li>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

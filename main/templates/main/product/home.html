@@ -1,1 +1,168 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
+
+{% block title %}AppleBy - Официальная техника Apple в Беларуси{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">AppleBy</h1>
+            <p class="hero-subtitle">Официальная техника Apple в Беларуси.<br>Инновации. Качество. Стиль.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'main:product_list' %}" class="btn-hero-primary">Смотреть каталог</a>
+                <a href="#featured" class="btn-hero-secondary">Узнать больше</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+{% if featured_products %}
+<section class="section-padding bg-white" id="featured">
+    <div class="container">
+        <h2 class="section-title">Рекомендуемые товары</h2>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card">
+                    <div class="position-relative">
+                        {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x250/f8f9fa/6c757d?text={{ product.name }}" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        {% if product.is_featured %}
+                            <span class="badge bg-primary position-absolute top-0 start-0 m-2">Хит</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text text-muted small">{{ product.short_description|truncatechars:60 }}</p>
+                        <div class="card-footer-content">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.old_price %}
+                                        <span class="old-price">{{ product.old_price }} ₽</span><br>
+                                        <span class="price">{{ product.price }} ₽</span>
+                                        <span class="discount-badge">-{{ product.discount_percentage }}%</span>
+                                    {% else %}
+                                        <span class="price">{{ product.price }} ₽</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{% url 'main:product_detail' product.slug %}" class="btn btn-apple btn-sm">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- New Products -->
+{% if new_products %}
+<section class="section-padding" style="background: var(--apple-light-gray);">
+    <div class="container">
+        <h2 class="section-title">Новинки</h2>
+        <div class="row g-4">
+            {% for product in new_products %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card">
+                    <div class="position-relative">
+                        {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x250/f8f9fa/6c757d?text={{ product.name }}" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Новинка</span>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text text-muted small">{{ product.short_description|truncatechars:60 }}</p>
+                        <div class="card-footer-content">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">{{ product.price }} ₽</span>
+                                <a href="{% url 'main:product_detail' product.slug %}" class="btn btn-apple btn-sm">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Sale Products -->
+{% if sale_products %}
+<section class="section-padding bg-white">
+    <div class="container">
+        <h2 class="section-title">Акции и скидки</h2>
+        <div class="row g-4">
+            {% for product in sale_products %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card">
+                    <div class="position-relative">
+                        {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x250/f8f9fa/6c757d?text={{ product.name }}" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">Скидка</span>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text text-muted small">{{ product.short_description|truncatechars:60 }}</p>
+                        <div class="card-footer-content">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.old_price %}
+                                        <span class="old-price">{{ product.old_price }} ₽</span><br>
+                                        <span class="price">{{ product.price }} ₽</span>
+                                        <span class="discount-badge">-{{ product.discount_percentage }}%</span>
+                                    {% else %}
+                                        <span class="price">{{ product.price }} ₽</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{% url 'main:product_detail' product.slug %}" class="btn btn-apple btn-sm">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Categories Section -->
+<section class="section-padding" style="background: var(--apple-light-gray);">
+    <div class="container">
+        <h2 class="section-title">Категории товаров</h2>
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{% url 'main:category_detail' category.slug %}" class="text-decoration-none">
+                    <div class="card category-card text-center">
+                        <div class="card-body py-4">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" class="img-fluid mb-3" alt="{{ category.name }}" style="height: 60px; object-fit: contain;">
+                            {% else %}
+                                <i class="fab fa-apple fa-3x text-primary mb-3"></i>
+                            {% endif %}
+                            <h6 class="card-title">{{ category.name }}</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

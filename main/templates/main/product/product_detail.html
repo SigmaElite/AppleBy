@@ -1,0 +1,7 @@
+{% extends "main/base.html" %}
+
+{% block title %}{{ product.name }}{% endblock title %}
+
+{% block content %}
+   <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+{% endblock  %}
